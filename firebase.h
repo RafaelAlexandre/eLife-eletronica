@@ -10,6 +10,6 @@
 
 //Métodos:
 void firebaseInit();
-void enviaDadosFirebase(uint32_t bpm, uint32_t spo2, int angulox, int anguloy, int anguloz);
+void enviaDadosFirebase(uint32_t bpm, uint32_t spo2, int flagAlarme);
 
 #endif //_FIREBASE_H

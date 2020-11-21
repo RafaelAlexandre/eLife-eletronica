@@ -37,5 +37,8 @@ static const unsigned char PROGMEM logo_bmp[] =
 //MÉTODOS:
   void inicializaDisplay();
   void printaDisplay(int bpm, int spo2);
-
+  void printaDisplayAlarmeBPMalto(int bpm, int spo2);
+  void printaDisplayAlarmeBPMbaixo(int bpm, int spo2);
+  void printaDisplayAlarmeSpo2Baixo(int bpm, int spo2);
+  void printaDisplayAlarmeSpo2BPMcriticos(int bpm, int spo2);
 #endif // _DISPLAY_H

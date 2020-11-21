@@ -2,8 +2,8 @@
 #define _DIRETIVAS_H
 
 //diretivas do wifi
-#define WIFI_SSID "Redmi"
-#define WIFI_PASSWORD "6999eb52564a"
+#define WIFI_SSID "2g_NetVirtua_5471"
+#define WIFI_PASSWORD "509954710"
 
 //diretivas do timer para envio de dados ao firebase
 #define REPORTING_PERIOD_MS 1000

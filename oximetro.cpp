@@ -1,4 +1,3 @@
-#include "angulo.h"
 #include "conexaoWifi.h"
 #include "dataHora.h"
 #include "diretivas.h"

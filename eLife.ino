@@ -2,7 +2,6 @@
 #include "display.h"
 #include "dataHora.h"
 #include "firebase.h"
-#include "angulo.h"
 #include "conexaoWifi.h"
 #include "oximetro.h"
 
@@ -12,9 +11,34 @@ uint32_t tsLastReportFirebase = 0;
 uint32_t spo2 = 0;
 uint32_t bpm = 0;
 uint32_t flag = 0;
-int angulox, anguloy, anguloz;
+
+//Variáveis do buzzer
+int buzzer_pin      = 15;
+int channel         = 0;
+int frequence       = 2000;
+int resolution      = 10;
+unsigned long timer = millis();
+int flagAlarme = 0;
+TaskHandle_t dobitaobyte;
+eTaskState statusOf;
 
 
+void sirene(void *pvParameters){
+    ledcWriteTone(channel,1000);
+    delay(500);
+    ledcWriteTone(channel,3000);
+    delay(500);
+    ledcWriteTone(channel,1000);
+    delay(500);
+    ledcWriteTone(channel,3000);
+    delay(500);
+    ledcWriteTone(channel,1000);
+    delay(500);
+    ledcWriteTone(channel,3000);
+    delay(500);
+    ledcWriteTone(channel, 0);
+    vTaskDelete(NULL);
+}
 
 void restartVariables() {
   //bpm = 0;
@@ -25,45 +49,72 @@ void restartVariables() {
 }
 
 void setup() {
+  ledcSetup(channel, frequence, resolution);
+  ledcAttachPin(buzzer_pin, channel);
+  timer = millis();
   Serial.begin(115200);
-  InicializaMPU6050();
   inicializaMAX30100();
   inicializaDisplay();
+  xTaskCreatePinnedToCore(sirene,"sirene", 10000, NULL, 1, &dobitaobyte,0);
   //wiFiConnection();
 }
 
 void loop() {
   atualizaMAX30100();
-  atualizaMPU6050();
+
+  if(flagAlarme == 1){
+    statusOf = eTaskGetState(dobitaobyte);
+    if (statusOf == eReady){
+      xTaskCreatePinnedToCore(sirene,"sirene", 10000, NULL, 1, &dobitaobyte,0);
+    }
+    flagAlarme = 0;
+  }
   
   if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
     if (flag == 0) {
       //pega todos os valores dos sensores
       bpm = pegaBpm();
       spo2 = pegaSpo2();
-      angulox = pegaAnguloX();
-      anguloy = pegaAnguloY();
-      anguloz = pegaAnguloZ();
-      printaDisplay(bpm, spo2);
       //printa valores na serial
       //printaDataHora();
-      printaAngulos(angulox, anguloy, anguloz);
+      
       printaBpmSpo2(bpm, spo2);
+      //Serial.println(flagAlarme);
     }
     tsLastReport = millis();
   }
 
-  if (millis() - tsLastReportFirebase > REPORTING_PERIOD_MS_FIREBASE) {
-    flag = 1;
-    desligaMAX30100();
-    wiFiConnection();
-    printaDataHora();
-
-    if (verificaConexao()) {
-      enviaDadosFirebase(bpm, spo2, angulox, anguloy, anguloz);
-      wiFiDisconnection();
+    if (millis() - tsLastReportFirebase > REPORTING_PERIOD_MS_FIREBASE) {
+      if(!((bpm<=80)&&(bpm>=40)) && (spo2<90)){
+        flagAlarme = 1;
+        printaDisplayAlarmeSpo2BPMcriticos(bpm, spo2);
+      }
+      else if((bpm<40)&&(spo2>=90)){
+        flagAlarme = 1;
+        printaDisplayAlarmeBPMbaixo(bpm, spo2);
+      }
+      else if(((bpm<=80)&&(bpm>=40))&&(spo2<90)){
+        flagAlarme = 1;
+        printaDisplayAlarmeSpo2Baixo(bpm, spo2);
+      }
+      else if((bpm >80)&&(spo2>=90)){
+        flagAlarme = 1;
+        printaDisplayAlarmeBPMalto(bpm, spo2);
+      }
+      if(flagAlarme == 0){
+        printaDisplay(bpm, spo2);
+      }
+      
+      flag = 1;
+      desligaMAX30100();
+      wiFiConnection();
+      printaDataHora();
+  
+      if (verificaConexao()) {
+        enviaDadosFirebase(bpm, spo2, flagAlarme);
+        wiFiDisconnection();
+      }
+      restartVariables();
+      tsLastReportFirebase = millis();
     }
-    restartVariables();
-    tsLastReportFirebase = millis();
-  }
 }

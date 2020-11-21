@@ -1,4 +1,3 @@
-#include "angulo.h"
 #include "conexaoWifi.h"
 #include "dataHora.h"
 #include "diretivas.h"
@@ -32,6 +31,89 @@ void printaDisplay(int bpm, int spo2){
   display.setCursor(20, 20);
   display.print(F("SpO2: "));
   display.println(spo2);
+  display.drawBitmap(
+    100,
+    (display.height() - LOGO_HEIGHT) / 2,
+    logo_bmp, LOGO_WIDTH, LOGO_HEIGHT, 1);
+
+  display.display();  
+}
+
+void printaDisplayAlarmeBPMalto(int bpm, int spo2){
+  display.clearDisplay();
+
+  display.setTextSize(1);             // Normal 1:1 pixel scale
+  display.setTextColor(SSD1306_WHITE);        // Draw white text
+  display.setCursor(20, 5);             // Start at top-left corner
+  display.print(F("BPM: "));
+  display.println(bpm);
+  display.setCursor(20, 15);
+  display.print(F("SpO2: "));
+  display.println(spo2);
+  display.setCursor(20, 25);
+  display.print(F("BPM alto!"));  
+  display.drawBitmap(
+    100,
+    (display.height() - LOGO_HEIGHT) / 2,
+    logo_bmp, LOGO_WIDTH, LOGO_HEIGHT, 1);
+
+  display.display();  
+}
+void printaDisplayAlarmeBPMbaixo(int bpm, int spo2){
+  display.clearDisplay();
+
+  display.setTextSize(1);             // Normal 1:1 pixel scale
+  display.setTextColor(SSD1306_WHITE);        // Draw white text
+  display.setCursor(20, 5);             // Start at top-left corner
+  display.print(F("BPM: "));
+  display.println(bpm);
+  display.setCursor(20, 15);
+  display.print(F("SpO2: "));
+  display.println(spo2);
+  display.setCursor(20, 25);
+  display.print(F("BPM baixo!"));  
+  display.drawBitmap(
+    100,
+    (display.height() - LOGO_HEIGHT) / 2,
+    logo_bmp, LOGO_WIDTH, LOGO_HEIGHT, 1);
+
+  display.display();  
+}
+
+void printaDisplayAlarmeSpo2Baixo(int bpm, int spo2){
+  display.clearDisplay();
+
+  display.setTextSize(1);             // Normal 1:1 pixel scale
+  display.setTextColor(SSD1306_WHITE);        // Draw white text
+  display.setCursor(20, 5);             // Start at top-left corner
+  display.print(F("BPM: "));
+  display.println(bpm);
+  display.setCursor(20, 15);
+  display.print(F("SpO2: "));
+  display.println(spo2);
+  display.setCursor(20, 25);
+  display.print(F("SpO2 baixo!"));  
+  display.drawBitmap(
+    100,
+    (display.height() - LOGO_HEIGHT) / 2,
+    logo_bmp, LOGO_WIDTH, LOGO_HEIGHT, 1);
+
+  display.display();  
+}
+
+void printaDisplayAlarmeSpo2BPMcriticos(int bpm, int spo2){
+  display.clearDisplay();
+
+  display.setTextSize(1);             // Normal 1:1 pixel scale
+  display.setTextColor(SSD1306_WHITE);        // Draw white text
+  display.setCursor(20, 5);             // Start at top-left corner
+  display.print(F("BPM: "));
+  display.println(bpm);
+  display.setCursor(20, 15);
+  display.print(F("SpO2: "));
+  display.println(spo2);
+  display.setCursor(20, 25);
+  display.print(F("Dados criticos!"));  
   display.drawBitmap(
     100,
     (display.height() - LOGO_HEIGHT) / 2,
