@@ -94,37 +94,38 @@ void loop() {
         printaDisplayMedicine(medicine);
         flagAlarme = 1;
       }
-      
-      if(!((bpm<=80)&&(bpm>=40)) && (spo2<90)){
-        flagAlarme = 1;
-        printaDisplayAlarmeSpo2BPMcriticos(bpm, spo2);
+      else{ 
+        if(!((bpm<=80)&&(bpm>=40)) && (spo2<90)){
+          flagAlarme = 1;
+          printaDisplayAlarmeSpo2BPMcriticos(bpm, spo2);
+        }
+        else if((bpm<40)&&(spo2>=90)){
+          flagAlarme = 1;
+          printaDisplayAlarmeBPMbaixo(bpm, spo2);
+        }
+        else if(((bpm<=80)&&(bpm>=40))&&(spo2<90)){
+          flagAlarme = 1;
+          printaDisplayAlarmeSpo2Baixo(bpm, spo2);
+        }
+        else if((bpm >80)&&(spo2>=90)){
+          flagAlarme = 1;
+          printaDisplayAlarmeBPMalto(bpm, spo2);
+        }
+        if(flagAlarme == 0){
+          printaDisplay(bpm, spo2);
+        }
+        
+        flag = 1;
+        desligaMAX30100();
+        wiFiConnection();
+        printaDataHora();
+    
+        if (verificaConexao()) {
+          enviaDadosFirebase(bpm, spo2, flagAlarme);
+          wiFiDisconnection();
+        }
+        restartVariables();
+        tsLastReportFirebase = millis();
       }
-      else if((bpm<40)&&(spo2>=90)){
-        flagAlarme = 1;
-        printaDisplayAlarmeBPMbaixo(bpm, spo2);
-      }
-      else if(((bpm<=80)&&(bpm>=40))&&(spo2<90)){
-        flagAlarme = 1;
-        printaDisplayAlarmeSpo2Baixo(bpm, spo2);
-      }
-      else if((bpm >80)&&(spo2>=90)){
-        flagAlarme = 1;
-        printaDisplayAlarmeBPMalto(bpm, spo2);
-      }
-      if(flagAlarme == 0){
-        printaDisplay(bpm, spo2);
-      }
-      
-      flag = 1;
-      desligaMAX30100();
-      wiFiConnection();
-      printaDataHora();
-  
-      if (verificaConexao()) {
-        enviaDadosFirebase(bpm, spo2, flagAlarme);
-        wiFiDisconnection();
-      }
-      restartVariables();
-      tsLastReportFirebase = millis();
     }
 }

@@ -123,5 +123,12 @@ void printaDisplayAlarmeSpo2BPMcriticos(int bpm, int spo2){
 }
 
 void printaDisplayMedicine(String medicine){
-  
+  display.clearDisplay();
+
+  display.setTextSize(1);             // Normal 1:1 pixel scale
+  display.setTextColor(SSD1306_WHITE);        // Draw white text
+  display.setCursor(20, 15);
+  display.print(F(medicine)); 
+
+  display.display();  
 }
