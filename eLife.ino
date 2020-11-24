@@ -12,6 +12,9 @@ uint32_t spo2 = 0;
 uint32_t bpm = 0;
 uint32_t flag = 0;
 
+//Variável dos remédios que vem do Realtime Database
+String medicine;
+
 //Variáveis do buzzer
 int buzzer_pin      = 15;
 int channel         = 0;
@@ -85,6 +88,13 @@ void loop() {
   }
 
     if (millis() - tsLastReportFirebase > REPORTING_PERIOD_MS_FIREBASE) {
+      //Verificar se a string retornada do leDadosRealTime é  != "x"
+      medicine = leDadosRealTime();
+      if(!medicine.equals("x")){
+        printaDisplayMedicine(medicine);
+        flagAlarme = 1;
+      }
+      
       if(!((bpm<=80)&&(bpm>=40)) && (spo2<90)){
         flagAlarme = 1;
         printaDisplayAlarmeSpo2BPMcriticos(bpm, spo2);

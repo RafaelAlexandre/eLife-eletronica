@@ -5,6 +5,9 @@
 #include "firebase.h"
 #include "oximetro.h"
 
+String dadoMedicine;
+int contadorMedicine;
+
 void firebaseInit() {
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
 }
@@ -35,7 +38,26 @@ void enviaDadosFirebase(uint32_t bpm, uint32_t spo2, int flagAlarme) {
   Firebase.push("Medico/PatientsDataPerDeviceId/MRA0001UI", sensorData);
   Firebase.set("/Users/MRA0001UI", sensorDataApp);
 
-  Serial.println("--------------------DADO A SEGUIR------------------------");
-  Serial.println(Firebase.getInt("/Medicines/MRA0001UI/Medicines/Busonid/hours"));
+}
 
+String leDadosRealTime(){
+  //verificar se o caminho está correto
+  contadorMedicine = Firebase.getInt("/Medicines/MRA0001UI/Medicines/count");
+  
+  if(contadorMedicine == 1){
+    dadoMedicine = Firebase.getString("/Medicines/MRA0001UI/Medicines/name");
+    return dadoMedicine;
+  }
+  else if (contadorMedicine > 1){
+    return "Tomar remédios";
+  }
+  else{
+    return "x";
+  }
+  
+}
+
+void enviaNuloRealTime(){
+  Firebase.push("/Medicines/MRA0001UI/Medicines/count", 0);
+  Firebase.push("/Medicines/MRA0001UI/Medicines/name", "x");
 }

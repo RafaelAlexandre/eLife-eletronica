@@ -121,3 +121,7 @@ void printaDisplayAlarmeSpo2BPMcriticos(int bpm, int spo2){
 
   display.display();  
 }
+
+void printaDisplayMedicine(String medicine){
+  
+}

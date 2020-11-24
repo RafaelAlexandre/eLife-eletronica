@@ -11,5 +11,6 @@
 //Métodos:
 void firebaseInit();
 void enviaDadosFirebase(uint32_t bpm, uint32_t spo2, int flagAlarme);
-
+String leDadosRealTime();
+void enviaNuloRealTime();
 #endif //_FIREBASE_H

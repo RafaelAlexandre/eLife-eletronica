@@ -41,4 +41,5 @@ static const unsigned char PROGMEM logo_bmp[] =
   void printaDisplayAlarmeBPMbaixo(int bpm, int spo2);
   void printaDisplayAlarmeSpo2Baixo(int bpm, int spo2);
   void printaDisplayAlarmeSpo2BPMcriticos(int bpm, int spo2);
+  void printaDisplayMedicine(String medicine);
 #endif // _DISPLAY_H
